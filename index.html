@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book2Play — Player Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/playerportal.css">
+</head>
+
+<body>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"><span class="toast-icon" id="toastIcon"><i data-lucide="check-circle"
+        style="color:var(--g)"></i></span><span id="toastMsg">Done!</span></div>
+
+  <!-- ══════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════ -->
+  <nav class="nav" id="mainNav">
+    <div class="nav-logo-wrap" style="display:flex;align-items:center;gap:0">
+      <div class="nav-logo" onclick="showPage('home')">BOOK<span>2</span>PLAY</div>
+      <span class="nav-badge">PLAYER</span>
+    </div>
+    <button class="mobile-menu-btn"
+      onclick="document.getElementById('mainNav').classList.toggle('menu-open')">☰</button>
+    <div class="nav-links" id="navGuest">
+      <button class="nav-link" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="scrollToCourts()">Courts</button>
+      <button class="nav-link" onclick="showPage('tournaments')">Tournaments</button>
+      <button class="nav-link" onclick="showPage('playpals')"><i data-lucide="users" style="width:14px;height:14px;display:inline-block;vertical-align:text-bottom;margin-right:2px"></i> Playpals</button>
+      <button class="nav-link" onclick="showPage('howit')">How It Works</button>
+      <button class="nav-link" onclick="window.open('ownerportal.html','_blank')"><i data-lucide="building"
+          style="width:16px;height:16px;display:inline-block;vertical-align:text-bottom;margin-right:6px"></i> Owner
+        Portal</button>
+    </div>
+    <div class="nav-links" id="navUser" style="display:none">
+      <button class="nav-link" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="scrollToCourts()">Courts</button>
+      <button class="nav-link" onclick="showPage('tournaments')">Tournaments</button>
+      <button class="nav-link" onclick="showPage('playpals')"><i data-lucide="users" style="width:14px;height:14px;display:inline-block;vertical-align:text-bottom;margin-right:2px"></i> Playpals</button>
+      <button class="nav-link" onclick="showPage('mybookings')">My Bookings</button>
+    </div>
+    <div class="nav-right">
+      <div class="nav-city" onclick="openModal('locationModal')"><i data-lucide="map-pin"
+          style="width:14px;height:14px"></i> <span id="navCity">C. Sambhajinagar</span> ▾</div>
+      <div id="navAuthBtns">
+        <button class="nav-link" onclick="openAuthModal('login')">Log In</button>
+        <button class="nav-cta" onclick="openAuthModal('signup')">Sign Up Free</button>
+      </div>
+      <div id="navUserInfo" style="display:none" class="nav-user">
+        <div class="nav-avatar" id="navAvatar" onclick="showPage('profile')">P</div>
+        <span class="nav-user-name" onclick="showPage('profile')" id="navUserName">Player</span>
+        <button class="nav-link" onclick="doLogout()"
+          style="font-size:12px;padding:6px 12px;color:var(--red)">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+
+    <!-- Hero -->
+    <section class="hero" style="padding-top:130px">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+      <img src="assets/img/hero-tennis.png" class="hero-human hero-human-left" alt="">
+      <img src="assets/img/hero-football.png" class="hero-human hero-human-right" alt="">
+
+      <div class="hero-badge"><span class="hero-badge-dot"></span> 200+ Verified Venues Across Maharashtra</div>
+      <h1>FIND YOUR<br><span class="green">COURT</span><br><span class="line2">BOOK & PLAY</span></h1>
+      <p class="hero-sub">Discover top-rated sports courts near you. Real-time slots, instant booking — cricket,
+        badminton, tennis, football & more.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" onclick="scrollToCourts()"><i data-lucide="search"
+            style="width:18px;height:18px"></i> Find Courts Now</button>
+        <button class="btn btn-outline btn-lg" onclick="showPage('howit')">How It Works →</button>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hstat-val">200+</div>
+          <div class="hstat-lbl">Venues</div>
+        </div>
+        <div>
+          <div class="hstat-val">15K+</div>
+          <div class="hstat-lbl">Bookings</div>
+        </div>
+        <div>
+          <div class="hstat-val">4.8★</div>
+          <div class="hstat-lbl">Avg Rating</div>
+        </div>
+        <div>
+          <div class="hstat-val">10+</div>
+          <div class="hstat-lbl">Sports</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search -->
+    <div class="search-section" id="search-section">
+      <div class="search-bar-big">
+        <div class="sb-field">
+          <div class="sb-label">📍 Location</div>
+          <input class="sb-input" type="text" placeholder="Area or city..." id="sbLocation"
+            value="Chhatrapati Sambhajinagar">
+        </div>
+        <div class="sb-field">
+          <div class="sb-label">🏅 Sport</div>
+          <select class="sb-input" id="sbSport">
+            <option value="all">All Sports</option>
+            <option value="cricket">Cricket</option>
+            <option value="badminton">Badminton</option>
+            <option value="tennis">Tennis</option>
+            <option value="football">Football</option>
+            <option value="basketball">Basketball</option>
+          </select>
+        </div>
+        <div class="sb-field">
+          <div class="sb-label">📅 Date</div>
+          <input class="sb-input" type="date" id="sbDate">
+        </div>
+        <button class="sb-btn" onclick="doSearch()">SEARCH COURTS →</button>
+      </div>
+    </div>
+
+    <!-- Courts -->
+    <div class="section" id="courts-section">
+      <div class="sec-hdr">
+        <div>
+          <div class="sec-sub">Nearby Courts</div>
+          <div class="sec-title">FEATURED <span>COURTS</span></div>
+        </div>
+        <button class="btn btn-ghost" onclick="scrollToCourts()">View All Courts →</button>
+      </div>
+      <div class="sport-pills" id="sportPills">
+        <div class="sp active" data-sport="all" onclick="filterSport(this)"><i data-lucide="activity" class="sp-icon"
+            style="width:18px;height:18px"></i> All Sports
+        </div>
+        <div class="sp" data-sport="cricket" onclick="filterSport(this)"><i data-lucide="cricket" class="sp-icon"
+            style="width:18px;height:18px"></i> Cricket</div>
+        <div class="sp" data-sport="badminton" onclick="filterSport(this)"><i data-lucide="badminton" class="sp-icon"
+            style="width:18px;height:18px"></i> Badminton
+        </div>
+        <div class="sp" data-sport="tennis" onclick="filterSport(this)"><i data-lucide="tennis" class="sp-icon"
+            style="width:18px;height:18px"></i> Tennis</div>
+        <div class="sp" data-sport="football" onclick="filterSport(this)"><i data-lucide="football" class="sp-icon"
+            style="width:18px;height:18px"></i> Football</div>
+        <div class="sp" data-sport="basketball" onclick="filterSport(this)"><i data-lucide="basketball" class="sp-icon"
+            style="width:18px;height:18px"></i> Basketball
+        </div>
+      </div>
+      <div class="courts-grid" id="courtsGrid"></div>
+    </div>
+
+    <!-- Features -->
+    <div class="section" style="background:var(--p1);max-width:100%;padding:80px 48px">
+      <div class="sec-hdr" style="max-width:1400px;margin:0 auto 36px">
+        <div>
+          <div class="sec-sub">Why Book2Play</div>
+          <div class="sec-title">PLAY <span>SMARTER</span></div>
+        </div>
+      </div>
+      <div class="features-grid" style="max-width:1400px;margin:0 auto">
+        <div class="feature-card">
+          <div class="fc-icon"><i data-lucide="map" style="width:36px;height:36px;color:var(--g)"></i></div>
+          <div class="fc-title">GPS Discovery</div>
+          <div class="fc-desc">Find courts around you instantly. Filter by distance, sport, price, and availability in
+            one click.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon"><i data-lucide="zap" style="width:36px;height:36px;color:var(--g)"></i></div>
+          <div class="fc-title">Real-Time Slots</div>
+          <div class="fc-desc">Live availability — green means go, red means taken. First payment locks the slot,
+            always.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon"><i data-lucide="credit-card" style="width:36px;height:36px;color:var(--g)"></i></div>
+          <div class="fc-title">UPI & Card Pay</div>
+          <div class="fc-desc">Pay via UPI, Razorpay, debit/credit cards or wallet. Secure, fast, and hassle-free.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon"><i data-lucide="shield-check" style="width:36px;height:36px;color:var(--g)"></i></div>
+          <div class="fc-title">Verified Venues</div>
+          <div class="fc-desc">Every court is verified and rated by real players. Book with full confidence.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <div class="footer-logo">BOOK<span>2</span>PLAY</div>
+        <div class="footer-desc">India's fastest growing sports venue booking platform. Play more, worry less.</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Players</div>
+        <div class="footer-link" onclick="scrollToCourts()">Find Courts</div>
+        <div class="footer-link" onclick="showPage('mybookings')">My Bookings</div>
+        <div class="footer-link" onclick="showPage('howit')">How It Works</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <div class="footer-link" onclick="window.open('ownerportal.html','_blank')">List Your Venue</div>
+        <div class="footer-link">Pricing</div>
+        <div class="footer-link">Blog</div>
+      </div>
+      <div>
+        <div class="footer-col-title">Support</div>
+        <div class="footer-link">Help Center</div>
+        <div class="footer-link">Contact Us</div>
+        <div class="footer-link">Privacy Policy</div>
+      </div>
+    </footer>
+    <div class="footer-bottom">
+      <div>© 2026 Book2Play. All rights reserved.</div>
+      <div class="logo">BOOK<span>2</span>PLAY</div>
+      <div>Made with <i data-lucide="heart"
+          style="width:14px;height:14px;color:var(--red);display:inline-block;vertical-align:text-bottom"></i> for
+        Indian sports lovers</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     PAGE: TOURNAMENTS
+══════════════════════════════════════ -->
+  <div class="page" id="page-tournaments">
+    <div class="page-hero">
+      <div class="sec-sub">Compete & Win</div>
+      <div class="page-hero-title">SPORTS <span>TOURNAMENTS</span></div>
+      <div class="page-hero-sub">Join local tournaments, showcase your skills, and win big prizes.</div>
+    </div>
+    <div class="section" style="padding-top:40px">
+      <div class="sport-pills" style="justify-content:center;margin-bottom:40px">
+        <div class="sp active"><i data-lucide="activity" class="sp-icon" style="width:18px;height:18px"></i> All
+          Tournaments</div>
+        <div class="sp"><i data-lucide="cricket" class="sp-icon" style="width:18px;height:18px"></i> Cricket</div>
+        <div class="sp"><i data-lucide="badminton" class="sp-icon" style="width:18px;height:18px"></i> Badminton</div>
+      </div>
+      <div class="tourneys-grid" id="tourneysGrid"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     PAGE: PLAYPALS
+══════════════════════════════════════ -->
+  <div class="page" id="page-playpals">
+    <div class="page-hero">
+      <div class="sec-sub">Find a Partner</div>
+      <div class="page-hero-title">MEET <span>PLAYPALS</span></div>
+      <div class="page-hero-sub">Need a player for your team or a partner for tennis? Connect and play.</div>
+    </div>
+    <div class="section" style="padding-top:40px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+        <div class="sport-pills" style="margin-bottom:0">
+          <div class="sp active"><i data-lucide="activity" class="sp-icon" style="width:18px;height:18px"></i> All Requests</div>
+          <div class="sp"><i data-lucide="tennis" class="sp-icon" style="width:18px;height:18px"></i> Tennis</div>
+          <div class="sp"><i data-lucide="cricket" class="sp-icon" style="width:18px;height:18px"></i> Cricket</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('postPlaypalModal')"><i data-lucide="plus" style="width:18px;height:18px"></i> Post Request</button>
+      </div>
+      <div class="playpals-grid" id="playpalsGrid"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     PAGE: HOW IT WORKS
+══════════════════════════════════════ -->
+  <div class="page" id="page-howit">
+    <div class="page-hero">
+      <div class="sec-sub">Simple 4-Step Process</div>
+      <div class="page-hero-title">HOW IT <span>WORKS</span></div>
+      <div class="page-hero-sub">From discovery to game day — here's how easy it is.</div>
+    </div>
+    <div class="section">
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-icon"><i data-lucide="map-pin" style="width:32px;height:32px;color:var(--g)"></i></div>
+          <div class="step-title">Find a Court</div>
+          <div class="step-desc">Search by location, sport, and date. GPS-powered discovery shows nearest venues first.
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-icon"><i data-lucide="clock" style="width:32px;height:32px;color:var(--g)"></i></div>
+          <div class="step-title">Pick Your Slot</div>
+          <div class="step-desc">See real-time availability. Green = available, Red = booked. Select start time and
+            duration.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-icon"><i data-lucide="credit-card" style="width:32px;height:32px;color:var(--g)"></i></div>
+          <div class="step-title">Pay Securely</div>
+          <div class="step-desc">Pay via UPI, card, or wallet. Your slot is instantly locked upon payment. No double
+            bookings.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <div class="step-icon"><i data-lucide="activity" style="width:32px;height:32px;color:var(--g)"></i></div>
+          <div class="step-title">Play!</div>
+          <div class="step-desc">Show your booking ID at the venue and enjoy your game. It's that simple.</div>
+        </div>
+      </div>
+    </div>
+    <div class="section" style="padding-top:0;text-align:center">
+      <button class="btn btn-primary btn-lg" onclick="scrollToCourts();showPage('home')">Find Courts Now →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     PAGE: MY BOOKINGS
+══════════════════════════════════════ -->
+  <div class="page" id="page-mybookings" style="padding-top:80px">
+    <div class="page-hero">
+      <div class="sec-sub">Your History</div>
+      <div class="page-hero-title">MY <span>BOOKINGS</span></div>
+    </div>
+    <div class="section">
+      <div class="bookings-table-wrap">
+        <div class="bt-hdr">
+          <div class="bt-title">ALL BOOKINGS</div>
+          <div class="bt-tabs">
+            <button class="bt-tab active" id="btab-u" onclick="switchBTab('upcoming')">Upcoming</button>
+            <button class="bt-tab" id="btab-p" onclick="switchBTab('past')">Past</button>
+          </div>
+        </div>
+        <table class="bookings-tbl">
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Court</th>
+              <th>Sport</th>
+              <th>Date & Time</th>
+              <th>Duration</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     PAGE: COURT DETAIL
+══════════════════════════════════════ -->
+  <div class="page" id="page-detail" style="padding-top:66px">
+    <div class="detail-hero" id="detailHero">
+      <span id="detailEmoji" style="z-index:1;font-size:100px">🏏</span>
+      <div class="detail-hero-overlay"></div>
+      <div class="detail-hero-info">
+        <div class="dhi-badge" id="detailBadge">FLOODLIT</div>
+        <div class="dhi-name" id="detailName">Court Name</div>
+        <div class="dhi-loc">📍 <span id="detailLocStr">Area, City</span> &nbsp;·&nbsp; <span
+            class="cc-stars">★★★★★</span>&nbsp;<span id="detailRating">4.8</span>&nbsp;<span
+            style="color:var(--muted);font-size:13px" id="detailReviews">(142)</span></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="position:absolute;top:80px;left:48px;z-index:2"
+        onclick="showPage('home')">← Back</button>
+    </div>
+
+    <div class="detail-body-grid">
+      <div>
+        <div class="detail-section">
+          <div class="detail-section-title">About This Court</div>
+          <p style="color:var(--soft);font-size:14px;line-height:1.8" id="detailAbout">A premier sports facility
+            offering world-class amenities and well-maintained surfaces for a great game experience.</p>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">Available Sports</div>
+          <div class="detail-sports" id="detailSports"></div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">Amenities</div>
+          <div class="amenity-row" id="detailAmenities"></div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">Location</div>
+          <div class="map-mock"><i data-lucide="map" style="width:20px;height:20px"></i>&nbsp; <span
+              id="detailMapAddr">Dharampeth, Chhatrapati Sambhajinagar</span></div>
+        </div>
+      </div>
+      <div class="detail-sidebar">
+        <div class="ds-card">
+          <div class="ds-price" id="dsPrice">₹1,200</div>
+          <div class="ds-price-sub">per hour · <span id="dsAvail" style="color:var(--g)">8 slots available today</span>
+          </div>
+          <button class="btn btn-primary btn-full btn-lg" style="margin-top:16px" onclick="openSlotsModal()">CHECK
+            AVAILABILITY →</button>
+        </div>
+        <div class="ds-card">
+          <div style="font-weight:700;margin-bottom:10px;font-size:14px">Quick Info</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--soft)">
+            <div style="display:flex;justify-content:space-between"><span>Surface</span><span
+                style="color:var(--txt);font-weight:600" id="dsSurface">Natural Grass</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Timing</span><span
+                style="color:var(--txt);font-weight:600">5:00 AM – 11:00 PM</span></div>
+            <div style="display:flex;justify-content:space-between"><span>Cancellation</span><span
+                style="color:var(--txt);font-weight:600">2 hrs before</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     PAGE: PROFILE
+══════════════════════════════════════ -->
+  <div class="page" id="page-profile" style="padding-top:66px">
+    <div class="page-hero">
+      <div class="sec-sub">Your Account</div>
+      <div class="page-hero-title">MY <span>PROFILE</span></div>
+    </div>
+    <div class="section">
+      <div class="profile-grid">
+        <div>
+          <div class="profile-sidebar">
+            <div class="profile-avatar-big" id="profileAvatarBig">P</div>
+            <div class="profile-name-big" id="profileNameBig">Player</div>
+            <div class="profile-email" id="profileEmailBig">player@example.com</div>
+            <div class="profile-stats-row">
+              <div class="ps-stat">
+                <div class="ps-val" id="profileBCount">0</div>
+                <div class="ps-lbl">Bookings</div>
+              </div>
+              <div class="ps-stat">
+                <div class="ps-val">4.9</div>
+                <div class="ps-lbl">Rating</div>
+              </div>
+              <div class="ps-stat">
+                <div class="ps-val">3</div>
+                <div class="ps-lbl">Sports</div>
+              </div>
+            </div>
+            <div class="profile-menu-item" onclick="showPage('mybookings')"><span class="pmi-icon"><i
+                  data-lucide="calendar" style="width:18px;height:18px"></i></span> My Bookings
+            </div>
+            <div class="profile-menu-item" onclick="showToast('Payment methods coming soon!')"><span class="pmi-icon"><i
+                  data-lucide="credit-card" style="width:18px;height:18px"></i></span> Payment Methods</div>
+            <div class="profile-menu-item" onclick="showToast('Rewards program coming soon!')"><span class="pmi-icon"><i
+                  data-lucide="star" style="width:18px;height:18px"></i></span> B2P Rewards</div>
+            <div class="profile-menu-item" onclick="showToast('Help center opening soon!')"><span class="pmi-icon"><i
+                  data-lucide="help-circle" style="width:18px;height:18px"></i></span> Help & Support</div>
+            <div class="profile-menu-item" style="color:var(--red)" onclick="doLogout()"><span class="pmi-icon"><i
+                  data-lucide="log-out" style="width:18px;height:18px"></i></span> Log Out</div>
+          </div>
+        </div>
+        <div>
+          <div style="background:var(--p2);border:1px solid var(--bdr);border-radius:var(--rl);padding:28px">
+            <div class="detail-section-title" style="margin-bottom:20px">Edit Profile</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="field"><label class="field-label">Full Name</label><input class="field-input" id="editName"
+                  placeholder="Your Name"></div>
+              <div class="field"><label class="field-label">Phone</label><input class="field-input"
+                  placeholder="+91 99999 99999"></div>
+              <div class="field"><label class="field-label">Email</label><input class="field-input" id="editEmail"
+                  placeholder="you@email.com"></div>
+              <div class="field"><label class="field-label">City</label><input class="field-input"
+                  value="Chhatrapati Sambhajinagar"></div>
+            </div>
+            <button class="btn btn-primary" onclick="showToast('✅ Profile updated!')">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     MODALS
+══════════════════════════════════════ -->
+
+  <!-- AUTH MODAL -->
+  <div class="overlay" id="authModal" onclick="closeModalOnBg(event,'authModal')">
+    <div class="modal modal-sm">
+      <div class="modal-hdr">
+        <div class="modal-title" id="authModalTitle">WELCOME BACK</div>
+        <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="atab-login" onclick="switchAuthTab('login')">Log In</div>
+          <div class="auth-tab" id="atab-signup" onclick="switchAuthTab('signup')">Sign Up</div>
+        </div>
+        <div id="form-login">
+          <div class="field"><label class="field-label">Email Address</label><input class="field-input" type="email"
+              placeholder="you@example.com" id="loginEmail"></div>
+          <div class="field"><label class="field-label">Password</label><input class="field-input" type="password"
+              placeholder="••••••••" id="loginPwd"></div>
+          <button class="btn btn-primary btn-full" style="margin-bottom:10px;font-size:15px;padding:14px"
+            onclick="doLogin()">LOG IN →</button>
+          <div class="auth-or">or continue with</div>
+          <button class="social-btn">🇬&nbsp; Continue with Google</button>
+        </div>
+        <div id="form-signup" style="display:none">
+          <div class="field"><label class="field-label">Full Name</label><input class="field-input" type="text"
+              placeholder="Arjun Sharma" id="signupName"></div>
+          <div class="field"><label class="field-label">Phone</label><input class="field-input" type="tel"
+              placeholder="+91 99999 99999"></div>
+          <div class="field"><label class="field-label">Email</label><input class="field-input" type="email"
+              placeholder="you@example.com"></div>
+          <div class="field"><label class="field-label">Password</label><input class="field-input" type="password"
+              placeholder="Min. 8 characters"></div>
+          <button class="btn btn-primary btn-full" style="margin-bottom:10px;font-size:15px;padding:14px"
+            onclick="doSignup()">CREATE ACCOUNT →</button>
+          <div class="auth-or">or</div>
+          <button class="social-btn">🇬&nbsp; Sign up with Google</button>
+        </div>
+        <div
+          style="margin-top:16px;padding:12px;background:var(--p2);border-radius:var(--r);font-size:12px;color:var(--muted);text-align:center;border:1px solid var(--bdr)">
+          <i data-lucide="building" style="width:14px;height:14px;display:inline-block;vertical-align:text-bottom"></i>
+          Are you a venue owner? <span style="color:var(--g);cursor:pointer;font-weight:600"
+            onclick="window.open('ownerportal.html','_blank')">Go to Owner Portal →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYPAL MODAL -->
+  <div class="overlay" id="postPlaypalModal" onclick="closeModalOnBg(event,'postPlaypalModal')">
+    <div class="modal modal-md">
+      <div class="modal-hdr">
+        <div class="modal-title">FIND PLAYERS</div>
+        <button class="modal-close" onclick="closeModal('postPlaypalModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field"><label class="field-label">Sport</label><select class="field-input field-select"><option>Tennis</option><option>Badminton</option><option>Cricket</option></select></div>
+          <div class="field"><label class="field-label">Venue</label><select class="field-input field-select"><option>LevelUp Cricket Arena</option><option>Smash Badminton Hub</option><option>City Tennis Park</option></select></div>
+          <div class="field"><label class="field-label">Date</label><input class="field-input" type="date"></div>
+          <div class="field"><label class="field-label">Time</label><input class="field-input" type="time"></div>
+          <div class="field"><label class="field-label">Players Needed</label><input class="field-input" type="number" placeholder="2"></div>
+          <div class="field"><label class="field-label">Cost per Player</label><input class="field-input" type="number" placeholder="₹"></div>
+          <div class="field field-full"><label class="field-label">Message</label><input class="field-input" type="text" placeholder="e.g. Looking for intermediate players to split the cost"></div>
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" style="margin-top:10px" onclick="closeModal('postPlaypalModal');showToast('Player Request Posted Successfully!')">POST REQUEST →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVIEW MODAL -->
+  <div class="overlay" id="reviewModal" onclick="closeModalOnBg(event,'reviewModal')">
+    <div class="modal modal-sm">
+      <div class="modal-hdr">
+        <div class="modal-title">RATE & REVIEW</div>
+        <button class="modal-close" onclick="closeModal('reviewModal')">✕</button>
+      </div>
+      <div class="modal-body" style="text-align:center">
+        <div style="font-size:14px;color:var(--muted);margin-bottom:20px">How was your experience at <b id="revCourtName" style="color:var(--txt)">LevelUp Arena</b>?</div>
+        <div style="display:flex;justify-content:center;gap:12px;margin-bottom:24px" id="starSelector">
+          <i data-lucide="star" style="width:36px;height:36px;color:var(--bdrg);cursor:pointer;transition:all .2s"></i>
+          <i data-lucide="star" style="width:36px;height:36px;color:var(--bdrg);cursor:pointer;transition:all .2s"></i>
+          <i data-lucide="star" style="width:36px;height:36px;color:var(--bdrg);cursor:pointer;transition:all .2s"></i>
+          <i data-lucide="star" style="width:36px;height:36px;color:var(--bdrg);cursor:pointer;transition:all .2s"></i>
+          <i data-lucide="star" style="width:36px;height:36px;color:var(--bdrg);cursor:pointer;transition:all .2s"></i>
+        </div>
+        <div class="field" style="text-align:left"><label class="field-label">Write a Review (Optional)</label><textarea class="field-input field-textarea" placeholder="Tell others about the surface, lighting, or staff..."></textarea></div>
+        <button class="btn btn-primary btn-full btn-lg" onclick="closeModal('reviewModal');showToast('Thank you! Your review has been published.')">SUBMIT REVIEW →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOCATION MODAL -->
+  <div class="overlay" id="locationModal" onclick="closeModalOnBg(event,'locationModal')">
+    <div class="modal modal-sm">
+      <div class="modal-hdr">
+        <div class="modal-title">SELECT CITY</div>
+        <button class="modal-close" onclick="closeModal('locationModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <button class="btn btn-primary btn-full" style="margin-bottom:18px" onclick="useGPS()"><i
+            data-lucide="navigation" style="width:16px;height:16px"></i> Use My GPS
+          Location</button>
+        <div
+          style="margin-bottom:14px;font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--g)">
+          — Or Select City —</div>
+        <div class="city-grid">
+          <div class="city-btn active" onclick="selectCity(this,'Chhatrapati Sambhajinagar')">C. Sambhajinagar</div>
+          <div class="city-btn" onclick="selectCity(this,'Nagpur')">Nagpur</div>
+          <div class="city-btn" onclick="selectCity(this,'Pune')">Pune</div>
+          <div class="city-btn" onclick="selectCity(this,'Mumbai')">Mumbai</div>
+          <div class="city-btn" onclick="selectCity(this,'Nashik')">Nashik</div>
+          <div class="city-btn" onclick="selectCity(this,'Aurangabad')">Aurangabad</div>
+        </div>
+        <button class="btn btn-primary btn-full" style="margin-top:20px" onclick="applyCity()">APPLY →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLOTS MODAL -->
+  <div class="overlay" id="slotsModal" onclick="closeModalOnBg(event,'slotsModal')">
+    <div class="modal modal-md" id="slotsModalInner"></div>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div class="overlay" id="successModal">
+    <div class="modal modal-sm">
+      <div class="success-screen" id="successContent"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="assets/js/playerportal.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book2Play — Owner Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/ownerportal.css">
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-icon" id="toastIcon"><i data-lucide="check-circle" style="color:var(--g)"></i></span>&nbsp;<span id="toastMsg">Done!</span></div>
+
+<!-- ══════════════════════════════════════
+     AUTH PAGE (shown first)
+══════════════════════════════════════ -->
+<div id="authPage" style="width:100%;display:flex">
+<div class="auth-page" style="width:100%">
+  <div class="auth-bg"></div>
+  <div class="auth-card">
+    <div class="auth-logo">BOOK<span>2</span>PLAY</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Sports Venue Management Platform</div>
+    <div class="auth-badge-auth"><i data-lucide="building" style="width:10px;height:10px;display:inline-block;vertical-align:text-bottom;margin-right:2px"></i> OWNER PORTAL</div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="oatab-login" onclick="oSwitchTab('login')">Log In</div>
+      <div class="auth-tab" id="oatab-signup" onclick="oSwitchTab('signup')">Register Venue</div>
+    </div>
+
+    <div id="oform-login">
+      <div class="field"><label class="field-label">Owner Email</label><input class="field-input" type="email" placeholder="owner@venue.com" id="ownerEmail"></div>
+      <div class="field"><label class="field-label">Password</label><input class="field-input" type="password" placeholder="••••••••" id="ownerPwd"></div>
+      <button class="btn btn-amber btn-full btn-lg" style="margin-bottom:10px" onclick="doOwnerLogin()">LOG IN TO DASHBOARD →</button>
+      <div class="auth-or">or</div>
+      <button class="social-btn">🇬&nbsp; Continue with Google</button>
+    </div>
+
+    <div id="oform-signup" style="display:none">
+      <div class="field"><label class="field-label">Your Name</label><input class="field-input" type="text" placeholder="Full Name" id="ownerName"></div>
+      <div class="field"><label class="field-label">Phone</label><input class="field-input" type="tel" placeholder="+91 99999 99999"></div>
+      <div class="field"><label class="field-label">Business Email</label><input class="field-input" type="email" placeholder="owner@venue.com"></div>
+      <div class="field"><label class="field-label">Venue / Business Name</label><input class="field-input" type="text" placeholder="e.g. LevelUp Sports Arena"></div>
+      <div class="field"><label class="field-label">Password</label><input class="field-input" type="password" placeholder="Min. 8 characters"></div>
+      <button class="btn btn-amber btn-full btn-lg" style="margin-bottom:10px" onclick="doOwnerSignup()">CREATE OWNER ACCOUNT →</button>
+      <div class="auth-or">or</div>
+      <button class="social-btn">🇬&nbsp; Sign up with Google</button>
+    </div>
+
+    <div class="player-note">Looking to book a court? <a onclick="window.open('playerportal.html','_blank')">Go to Player Portal →</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN DASHBOARD (hidden until login)
+══════════════════════════════════════ -->
+<div id="dashApp" style="display:none;width:100%">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">BOOK<span>2</span>PLAY</div>
+    <div class="sb-badge"><i data-lucide="building" style="width:10px;height:10px;display:inline-block;vertical-align:middle;margin-right:2px"></i> Owner</div>
+    <button class="sidebar-close-btn" onclick="document.querySelector('.sidebar').classList.remove('show')">✕</button>
+  </div>
+  <div class="sb-owner-info">
+    <div class="sb-avatar" id="sbAvatar">VP</div>
+    <div>
+      <div class="sb-owner-name" id="sbOwnerName">Venue Pro</div>
+      <div class="sb-owner-sub">Venue Owner</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sbn-section">Main</div>
+    <div class="sbn-item active" onclick="goPage('overview',this)"><span class="sbn-icon"><i data-lucide="layout-dashboard" style="width:16px;height:16px"></i></span> Overview<span class="sbn-badge">4</span></div>
+    <div class="sbn-item" onclick="goPage('bookings',this)"><span class="sbn-icon"><i data-lucide="inbox" style="width:16px;height:16px"></i></span> Bookings</div>
+    <div class="sbn-item" onclick="goPage('tournaments',this)"><span class="sbn-icon"><i data-lucide="trophy" style="width:16px;height:16px"></i></span> Tournaments <span class="sbn-badge" style="background:var(--a);color:white;width:auto;padding:0 6px;border-radius:10px;right:16px">NEW</span></div>
+    <div class="sbn-section">My Venues</div>
+    <div class="sbn-item" onclick="goPage('courts',this)"><span class="sbn-icon"><i data-lucide="map-pin" style="width:16px;height:16px"></i></span> My Courts</div>
+    <div class="sbn-item" onclick="goPage('addcourt',this)"><span class="sbn-icon"><i data-lucide="plus" style="width:16px;height:16px"></i></span> Add Court</div>
+    <div class="sbn-item" onclick="goPage('slots',this)"><span class="sbn-icon"><i data-lucide="clock" style="width:16px;height:16px"></i></span> Slot Manager</div>
+    <div class="sbn-section">Financials</div>
+    <div class="sbn-item" onclick="goPage('earnings',this)"><span class="sbn-icon"><i data-lucide="dollar-sign" style="width:16px;height:16px"></i></span> Earnings</div>
+    <div class="sbn-section">Account</div>
+    <div class="sbn-item" onclick="goPage('profile',this)"><span class="sbn-icon"><i data-lucide="user" style="width:16px;height:16px"></i></span> Profile</div>
+    <div class="sbn-item" onclick="goPage('settings',this)"><span class="sbn-icon"><i data-lucide="settings" style="width:16px;height:16px"></i></span> Settings</div>
+  </nav>
+  <div class="sb-bottom">
+    <button class="sb-player-link" onclick="window.open('playerportal.html','_blank')"><i data-lucide="arrow-right" style="width:14px;height:14px;color:var(--a);display:inline-block;vertical-align:text-bottom"></i> Switch to Player Portal</button>
+    <button class="btn btn-ghost btn-full btn-sm" style="margin-top:8px" onclick="doOwnerLogout()">Log Out</button>
+  </div>
+</aside>
+
+<!-- MAIN AREA -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="topbar-mobile-btn" onclick="document.querySelector('.sidebar').classList.toggle('show')">☰</button>
+      <div class="topbar-title" id="topbarTitle">OVERVIEW</div>
+    </div>
+    <button class="topbar-btn" style="padding:8px;display:flex"><i data-lucide="bell" style="width:16px;height:16px"></i></button>
+    <button class="btn btn-amber" onclick="goPage('addcourt')"><i data-lucide="plus" style="width:16px;height:16px"></i> Add Court</button>
+    <div class="topbar-notif" onclick="showToast('No new notifications')">🔔<div class="notif-dot"></div></div>
+  </div>
+
+  <!-- ════════════════════ PAGE: OVERVIEW ════════════════════ -->
+  <div class="dash-page active" id="dp-overview">
+    <div class="dash-page-title">GOOD MORNING, <span style="color:var(--a)" id="ownerGreet">OWNER</span></div>
+    <div class="dash-page-sub">Here's your venue performance at a glance · <span id="todayDate"></span></div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="calendar" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Today's Bookings</div><div class="kpi-val">14</div><div class="kpi-chg">▲ +3 vs yesterday</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="dollar-sign" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Revenue Today</div><div class="kpi-val">₹8.4K</div><div class="kpi-chg">▲ 12% vs avg</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="star" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Avg Rating</div><div class="kpi-val">4.7★</div><div class="kpi-chg">▲ +0.1 this week</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="map-pin" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Active Courts</div><div class="kpi-val">6</div><div class="kpi-chg down">▼ 1 under maintenance</div></div>
+    </div>
+
+    <div class="d-grid-2-1">
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">RECENT BOOKINGS</div><button class="btn btn-outline btn-sm" onclick="goPage('bookings',null)">View All →</button></div>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead><tr><th>Player</th><th>Court</th><th>Date & Slot</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><b>Rahul Sharma</b></td><td>Cricket Ground A</td><td>Today · 6:00 AM</td><td style="color:var(--a);font-weight:700">₹1,200</td><td><span class="sc sc-ok">✓ Confirmed</span></td></tr>
+              <tr><td><b>Priya Nair</b></td><td>Badminton Court 2</td><td>Today · 8:00 AM</td><td style="color:var(--a);font-weight:700">₹400</td><td><span class="sc sc-ok">✓ Confirmed</span></td></tr>
+              <tr><td><b>Arjun Mehta</b></td><td>Tennis Court 1</td><td>Today · 10:00 AM</td><td style="color:var(--a);font-weight:700">₹800</td><td><span class="sc sc-pend">⏳ Pending</span></td></tr>
+              <tr><td><b>Sneha Kulkarni</b></td><td>Cricket Ground B</td><td>Today · 4:00 PM</td><td style="color:var(--a);font-weight:700">₹2,400</td><td><span class="sc sc-ok">✓ Confirmed</span></td></tr>
+              <tr><td><b>Dev Joshi</b></td><td>Badminton Court 1</td><td>Today · 6:00 PM</td><td style="color:var(--red)">₹400</td><td><span class="sc sc-can">✗ Cancelled</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">REVENUE</div></div>
+        <div class="chart-bars" id="overviewChart"></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 24px;font-size:12px;color:var(--muted)">
+          <span>Last 7 months</span><span style="color:var(--a);font-weight:700">₹2.4L total</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">COURT PERFORMANCE</div></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Court</th><th>Sport</th><th>Bookings (Month)</th><th>Revenue</th><th>Occupancy</th><th>Rating</th></tr></thead>
+          <tbody>
+            <tr><td><b>Cricket Ground A</b></td><td>Cricket</td><td>48</td><td style="color:var(--a);font-weight:700">₹57,600</td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:var(--p4);border-radius:3px;overflow:hidden"><div style="width:76%;height:100%;background:var(--a);border-radius:3px"></div></div><span>76%</span></div></td><td>4.8 ★</td></tr>
+            <tr><td><b>Badminton Court 1</b></td><td>Badminton</td><td>62</td><td style="color:var(--a);font-weight:700">₹24,800</td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:var(--p4);border-radius:3px;overflow:hidden"><div style="width:88%;height:100%;background:var(--green);border-radius:3px"></div></div><span>88%</span></div></td><td>4.6 ★</td></tr>
+            <tr><td><b>Tennis Court 1</b></td><td>Tennis</td><td>35</td><td style="color:var(--a);font-weight:700">₹28,000</td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:6px;background:var(--p4);border-radius:3px;overflow:hidden"><div style="width:58%;height:100%;background:var(--a);border-radius:3px"></div></div><span>58%</span></div></td><td>4.9 ★</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ PAGE: BOOKINGS ════════════════════ -->
+  <div class="dash-page" id="dp-bookings">
+    <div class="dash-page-title">ALL <span style="color:var(--a)">BOOKINGS</span></div>
+    <div class="dash-page-sub">Complete booking history across all your courts.</div>
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" id="bfilt-all" onclick="setBookingFilter('all',this)" style="background:var(--ad)">All</button>
+        <button class="btn btn-ghost btn-sm" id="bfilt-confirmed" onclick="setBookingFilter('confirmed',this)">Confirmed</button>
+        <button class="btn btn-ghost btn-sm" id="bfilt-pending" onclick="setBookingFilter('pending',this)">Pending</button>
+        <button class="btn btn-ghost btn-sm" id="bfilt-cancelled" onclick="setBookingFilter('cancelled',this)">Cancelled</button>
+      </div>
+      <input class="field-input" type="date" style="background:var(--p2);width:auto;padding:8px 12px;font-size:13px">
+    </div>
+    <div class="card">
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Booking ID</th><th>Player</th><th>Court</th><th>Date</th><th>Slot</th><th>Duration</th><th>Amount</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="allBookingsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ PAGE: MY COURTS ════════════════════ -->
+  <div class="dash-page" id="dp-courts">
+    <div class="dash-page-title">MY <span style="color:var(--a)">COURTS</span></div>
+    <div class="dash-page-sub">Manage your listed venues and courts.</div>
+    <div class="court-mini-grid" id="ownerCourtGrid"></div>
+  </div>
+
+  <!-- ════════════════════ PAGE: ADD COURT ════════════════════ -->
+  <div class="dash-page" id="dp-addcourt">
+    <div class="dash-page-title">ADD <span style="color:var(--a)">COURT</span></div>
+    <div class="dash-page-sub">List a new venue on Book2Play and start accepting bookings.</div>
+    <div class="d-grid-2-1" style="gap:24px">
+      <div class="card" style="padding:28px">
+        <div style="font-family:var(--fd);font-size:20px;letter-spacing:.5px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--bdr)">BASIC DETAILS</div>
+        <div class="form-grid">
+          <div class="field"><label class="field-label">Court / Venue Name</label><input class="field-input" type="text" placeholder="e.g. LevelUp Cricket Arena"></div>
+          <div class="field"><label class="field-label">Sport Type</label>
+            <select class="field-input field-select"><option>Cricket</option><option>Badminton</option><option>Tennis</option><option>Football</option><option>Basketball</option></select></div>
+          <div class="field"><label class="field-label">City</label><input class="field-input" type="text" placeholder="Chhatrapati Sambhajinagar"></div>
+          <div class="field"><label class="field-label">Area / Landmark</label><input class="field-input" type="text" placeholder="Dharampeth, near XYZ"></div>
+          <div class="field"><label class="field-label">Price per Hour (₹)</label><input class="field-input" type="number" placeholder="e.g. 1200"></div>
+          <div class="field"><label class="field-label">Court Surface</label>
+            <select class="field-input field-select"><option>Natural Grass</option><option>Artificial Turf</option><option>Hard Court</option><option>Clay</option><option>Wooden/PU</option></select></div>
+          <div class="field field-full"><label class="field-label">Description</label><textarea class="field-input field-textarea" placeholder="Describe your facility — surface, lighting, amenities, rules, parking..."></textarea></div>
+        </div>
+        <div style="margin-top:4px;margin-bottom:20px">
+          <div style="font-family:var(--fd);font-size:18px;letter-spacing:.5px;margin-bottom:14px">AMENITIES</div>
+          <div class="amenity-grid-form" id="addCourtAmenityGrid"></div>
+        </div>
+        <button class="btn btn-amber btn-lg" onclick="publishCourt()">PUBLISH COURT →</button>
+      </div>
+      <div>
+        <div class="card" style="padding:22px;margin-bottom:16px">
+          <div style="font-family:var(--fd);font-size:18px;letter-spacing:.5px;margin-bottom:16px">SLOT TIMING</div>
+          <div class="field"><label class="field-label">Opens At</label><input class="field-input" type="time" value="06:00"></div>
+          <div class="field"><label class="field-label">Closes At</label><input class="field-input" type="time" value="22:00"></div>
+          <div style="background:var(--p3);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;font-size:12px;color:var(--soft)">
+            💡 System will auto-generate 30-min slots within these hours.
+          </div>
+        </div>
+        <div class="card" style="padding:22px">
+          <div style="font-family:var(--fd);font-size:18px;letter-spacing:.5px;margin-bottom:14px">CHECKLIST</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
+            <div style="display:flex;align-items:center;gap:8px;color:var(--green)">✓ Court details</div>
+            <div style="display:flex;align-items:center;gap:8px;color:var(--green)">✓ Pricing set</div>
+            <div style="display:flex;align-items:center;gap:8px;color:var(--soft)">○ Photos uploaded</div>
+            <div style="display:flex;align-items:center;gap:8px;color:var(--soft)">○ Bank details verified</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ PAGE: SLOT MANAGER ════════════════════ -->
+  <div class="dash-page" id="dp-slots">
+    <div class="dash-page-title">SLOT <span style="color:var(--a)">MANAGER</span></div>
+    <div class="dash-page-sub">Control your court's availability. Tap to toggle open/blocked.</div>
+    <div class="d-grid-2-1" style="margin-bottom:0">
+      <div>
+        <div style="display:flex;gap:10px;margin-bottom:20px;align-items:center">
+          <select class="field-input" style="background:var(--p2);width:auto;padding:10px 14px;font-size:14px">
+            <option>Cricket Ground A</option>
+            <option>Badminton Court 1</option>
+            <option>Tennis Court 1</option>
+          </select>
+          <input type="date" class="field-input" style="background:var(--p2);width:auto;padding:10px 14px">
+        </div>
+        <div style="display:flex;gap:14px;font-size:12px;color:var(--soft);margin-bottom:14px;align-items:center">
+          <i data-lucide="circle" fill="var(--green)" style="width:12px;height:12px;color:var(--green)"></i> Open &nbsp;&nbsp;
+          <i data-lucide="circle" fill="var(--red)" style="width:12px;height:12px;color:var(--red)"></i> Blocked / Unavailable &nbsp;&nbsp;
+          <i data-lucide="circle" fill="var(--a)" style="width:12px;height:12px;color:var(--a)"></i> Already Booked
+        </div>
+        <div class="slot-grid-owner" id="ownerSlotGrid"></div>
+        <div style="margin-top:20px;display:flex;gap:12px">
+          <button class="btn btn-amber" onclick="showToast('Slot availability saved!')">SAVE CHANGES →</button>
+          <button class="btn btn-ghost" onclick="showToast('All slots set to open!')">Reset to All Open</button>
+        </div>
+      </div>
+      <div class="card" style="padding:22px;align-self:start">
+        <div style="font-family:var(--fd);font-size:18px;letter-spacing:.5px;margin-bottom:14px">TODAY'S STATS</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px">
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bdr)"><span style="color:var(--soft)">Total Slots</span><span style="font-weight:700">18</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bdr)"><span style="color:var(--soft)">Booked</span><span style="color:var(--a);font-weight:700">11</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bdr)"><span style="color:var(--soft)">Available</span><span style="color:var(--green);font-weight:700">7</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0"><span style="color:var(--soft)">Occupancy</span><span style="color:var(--a);font-weight:700">61%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ PAGE: EARNINGS ════════════════════ -->
+  <div class="dash-page" id="dp-earnings">
+    <div class="dash-page-title">EARNINGS <span style="color:var(--a)">REPORT</span></div>
+    <div class="dash-page-sub">Your financial summary and payout history.</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="dollar-sign" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Total Earned</div><div class="kpi-val">₹2.4L</div><div class="kpi-chg">▲ 18% vs last month</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="calendar" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">This Month</div><div class="kpi-val">₹48K</div><div class="kpi-chg">▲ March 2026</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="wallet" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Available</div><div class="kpi-val">₹60K</div><div class="kpi-chg">Ready to withdraw</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="percent" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Platform Fee</div><div class="kpi-val">5%</div><div class="kpi-chg">₹12K deducted MTD</div></div>
+    </div>
+    <div class="earn-grid">
+      <div>
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-hdr"><div class="card-title">MONTHLY REVENUE</div></div>
+          <div class="chart-bars" id="earnChart" style="height:140px"></div>
+          <div style="display:grid;grid-template-columns:repeat(8,1fr);padding:0 24px 16px;gap:10px">
+            <div style="text-align:center;font-size:9px;color:var(--muted)">Aug</div><div style="text-align:center;font-size:9px;color:var(--muted)">Sep</div><div style="text-align:center;font-size:9px;color:var(--muted)">Oct</div><div style="text-align:center;font-size:9px;color:var(--muted)">Nov</div><div style="text-align:center;font-size:9px;color:var(--muted)">Dec</div><div style="text-align:center;font-size:9px;color:var(--muted)">Jan</div><div style="text-align:center;font-size:9px;color:var(--muted)">Feb</div><div style="text-align:center;font-size:9px;color:var(--muted);color:var(--a)">Mar</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">PAYOUT HISTORY</div></div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Date</th><th>Amount</th><th>Platform Fee</th><th>Net</th><th>Method</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Mar 1, 2026</td><td style="font-weight:700">₹63,000</td><td style="color:var(--red)">₹3,000</td><td style="color:var(--a);font-weight:700">₹60,000</td><td>NEFT</td><td><span class="sc sc-ok">Done</span></td></tr>
+                <tr><td>Feb 1, 2026</td><td style="font-weight:700">₹57,750</td><td style="color:var(--red)">₹2,750</td><td style="color:var(--a);font-weight:700">₹55,000</td><td>NEFT</td><td><span class="sc sc-ok">Done</span></td></tr>
+                <tr><td>Jan 1, 2026</td><td style="font-weight:700">₹68,250</td><td style="color:var(--red)">₹3,250</td><td style="color:var(--a);font-weight:700">₹65,000</td><td>NEFT</td><td><span class="sc sc-ok">Done</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="padding:24px">
+          <div style="font-family:var(--fd);font-size:22px;letter-spacing:.5px;margin-bottom:16px">WITHDRAW FUNDS</div>
+          <div style="background:var(--p3);border:1px solid var(--bdra);border-radius:var(--r);padding:16px;margin-bottom:16px;text-align:center">
+            <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Available Balance</div>
+            <div style="font-family:var(--fd);font-size:44px;color:var(--a);line-height:1">₹60,000</div>
+          </div>
+          <div class="field"><label class="field-label">Bank Account</label><input class="field-input" value="HDFC ****4521" readonly style="cursor:default"></div>
+          <button class="btn btn-amber btn-full btn-lg" onclick="showToast('Withdrawal initiated! Credit in 2-3 business days.')">WITHDRAW ₹60,000 →</button>
+          <div style="font-size:12px;color:var(--muted);margin-top:10px;text-align:center">Processing time: 2-3 business days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ PAGE: PROFILE ════════════════════ -->
+  <div class="dash-page" id="dp-profile">
+    <div class="dash-page-title">MY <span style="color:var(--a)">PROFILE</span></div>
+    <div class="dash-page-sub">Manage your owner account details.</div>
+    <div class="profile-banner">
+      <div class="pa-avatar" id="paAvatar">VP</div>
+      <div style="flex:1">
+        <div style="font-family:var(--fd);font-size:30px;letter-spacing:1px" id="paName">Venue Pro</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px" id="paEmail">owner@example.com</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <span style="background:var(--ad);border:1px solid var(--bdra);color:var(--a);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px">Verified Owner</span>
+          <span style="background:rgba(57,255,20,.1);border:1px solid rgba(57,255,20,.2);color:var(--green);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px">6 Courts Active</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-grid-1-1" style="margin-bottom:0">
+      <div class="card" style="padding:28px">
+        <div style="font-family:var(--fd);font-size:20px;letter-spacing:.5px;margin-bottom:20px">PERSONAL INFO</div>
+        <div class="field"><label class="field-label">Full Name</label><input class="field-input" id="pFullName" value="Venue Pro"></div>
+        <div class="field"><label class="field-label">Email</label><input class="field-input" id="pEmail" value="owner@example.com"></div>
+        <div class="field"><label class="field-label">Phone</label><input class="field-input" value="+91 98765 43210"></div>
+        <div class="field"><label class="field-label">City</label><input class="field-input" value="Chhatrapati Sambhajinagar"></div>
+        <button class="btn btn-amber" onclick="saveProfile()">SAVE CHANGES →</button>
+      </div>
+      <div class="card" style="padding:28px">
+        <div style="font-family:var(--fd);font-size:20px;letter-spacing:.5px;margin-bottom:20px">BUSINESS INFO</div>
+        <div class="field"><label class="field-label">Business Name</label><input class="field-input" value="Pro Sports Arena Pvt. Ltd."></div>
+        <div class="field"><label class="field-label">GST Number</label><input class="field-input" placeholder="27AAAAA0000A1Z5"></div>
+        <div class="field"><label class="field-label">Bank Account</label><input class="field-input" value="HDFC ****4521" readonly></div>
+        <div class="field"><label class="field-label">IFSC Code</label><input class="field-input" placeholder="HDFC0001234"></div>
+        <button class="btn btn-amber" onclick="showToast('✅ Business info updated!')">SAVE CHANGES →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ PAGE: TOURNAMENTS ════════════════════ -->
+  <div class="dash-page" id="dp-tournaments">
+    <div class="page-header-flex">
+      <div>
+        <div class="dash-page-title">ORGANIZE <span style="color:var(--a)">TOURNAMENTS</span></div>
+        <div class="dash-page-sub" style="margin-bottom:0">Host tournaments, collect entry fees, and boost your venue's popularity.</div>
+      </div>
+      <button class="btn btn-amber" onclick="openModal('addTourneyModal')"><i data-lucide="plus" style="width:16px;height:16px"></i> Host Tournament</button>
+    </div>
+    
+    <div class="kpi-row kpi-row-3">
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="trophy" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Active Events</div><div class="kpi-val">2</div><div class="kpi-chg">Currently open for registration</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="users" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Total Participants</div><div class="kpi-val">20</div><div class="kpi-chg">Registered across all events</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="banknote" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Fees Collected</div><div class="kpi-val">₹50,400</div><div class="kpi-chg">Total entry fees handled</div></div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="card-hdr" style="display:flex;justify-content:space-between;align-items:center"><div class="card-title">YOUR TOURNAMENTS</div></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Event Name</th><th>Sport</th><th>Dates</th><th>Entry Fee</th><th>Prize Pool</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="ownerTourneysTbody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ PAGE: SETTINGS ════════════════════ -->
+  <div class="dash-page" id="dp-settings">
+    <div class="dash-page-title">VENUE <span style="color:var(--a)">SETTINGS</span></div>
+    <div class="dash-page-sub">Configure your booking policies and preferences.</div>
+    <div class="d-grid-2-1" style="margin-bottom:0">
+      <div class="settings-list">
+        <div class="setting-item"><div class="si-info"><div class="si-lbl">Auto-Confirm Bookings</div><div class="si-sub">Instantly confirm all new player bookings without manual approval</div></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-k"></div></div></div>
+        <div class="setting-item"><div class="si-info"><div class="si-lbl">Allow Cancellations</div><div class="si-sub">Players can cancel bookings up to the configured window</div></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-k"></div></div></div>
+        <div class="setting-item"><div class="si-info"><div class="si-lbl">SMS Notifications</div><div class="si-sub">Receive SMS alerts for new bookings and cancellations</div></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-k"></div></div></div>
+        <div class="setting-item"><div class="si-info"><div class="si-lbl">Email Reports</div><div class="si-sub">Daily/weekly booking and revenue reports via email</div></div><div class="toggle" onclick="this.classList.toggle('on')"><div class="toggle-k"></div></div></div>
+        <div class="setting-item"><div class="si-info"><div class="si-lbl">Listed on Discovery</div><div class="si-sub">Your courts appear in player search results</div></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-k"></div></div></div>
+        <div class="card" style="padding:22px">
+          <div class="form-grid-3">
+            <div class="field"><label class="field-label">Cancellation Window</label><input class="field-input" type="number" value="2" placeholder="Hours before slot"></div>
+            <div class="field"><label class="field-label">Min. Booking Notice</label><input class="field-input" type="number" value="1" placeholder="Hours ahead"></div>
+            <div class="field"><label class="field-label">Max Advance Booking</label><input class="field-input" type="number" value="30" placeholder="Days ahead"></div>
+          </div>
+          <div style="font-family:var(--fd);font-size:16px;letter-spacing:.5px;margin:24px 0 16px;padding-top:24px;border-top:1px solid var(--bdr)">DYNAMIC PRICING</div>
+          <div class="setting-item" style="padding:0;border:none;margin-bottom:16px"><div class="si-info"><div class="si-lbl">Enable Peak Hours Pricing</div><div class="si-sub">Automatically charge more during high-demand hours</div></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-k"></div></div></div>
+          <div class="form-grid-3">
+            <div class="field"><label class="field-label">Peak Start Time</label><input class="field-input" type="time" value="18:00"></div>
+            <div class="field"><label class="field-label">Peak End Time</label><input class="field-input" type="time" value="22:00"></div>
+            <div class="field"><label class="field-label">Price Multiplier</label><select class="field-input field-select"><option>1.25x (25% extra)</option><option selected>1.50x (50% extra)</option><option>2.0x (Double)</option></select></div>
+          </div>
+          <button class="btn btn-amber" style="margin-top:20px" onclick="showToast('⚙️ Settings saved successfully!')">SAVE SETTINGS →</button>
+        </div>
+      </div>
+      <div class="card" style="padding:22px;align-self:start">
+        <div style="font-family:var(--fd);font-size:20px;letter-spacing:.5px;margin-bottom:16px">QUICK ACTIONS</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <button class="btn btn-outline btn-full" onclick="goPage('addcourt',null)">+ Add New Court</button>
+          <button class="btn btn-ghost btn-full" onclick="showToast('Report exported!')"><i data-lucide="download" style="width:16px;height:16px"></i> Export Data</button>
+          <button class="btn btn-ghost btn-full" onclick="showToast('Share link copied!')"><i data-lucide="link" style="width:16px;height:16px"></i> Share Venue Link</button>
+          <button class="btn btn-danger btn-full" style="padding:10px" onclick="showToast('Please contact support to delete account')">Delete Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.main -->
+</div><!-- /#dashApp -->
+
+  <!-- ADD TOURNAMENT MODAL -->
+  <div class="overlay" id="addTourneyModal" onclick="closeModalOnBg(event,'addTourneyModal')">
+    <div class="modal modal-md">
+      <div class="modal-hdr">
+        <div class="modal-title">HOST TOURNAMENT</div>
+        <button class="modal-close" onclick="closeModal('addTourneyModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field field-full"><label class="field-label">Tournament Name</label><input class="field-input" type="text" placeholder="e.g. Summer Smash Badminton Pro"></div>
+          <div class="field"><label class="field-label">Sport</label><select class="field-input field-select"><option>Badminton</option><option>Cricket</option><option>Tennis</option><option>Football</option></select></div>
+          <div class="field"><label class="field-label">Tournament Dates</label><input class="field-input" type="text" placeholder="12 Apr - 14 Apr 2026"></div>
+          <div class="field"><label class="field-label">Entry Fee (Per Team/Player)</label><input class="field-input" type="number" placeholder="₹"></div>
+          <div class="field"><label class="field-label">Total Prize Pool</label><input class="field-input" type="number" placeholder="₹"></div>
+          <div class="field field-full"><label class="field-label">Rules & Details</label><textarea class="field-input field-textarea" placeholder="Minimum age, knockout format, etc..."></textarea></div>
+        </div>
+        <button class="btn btn-amber btn-full btn-lg" style="margin-top:10px" onclick="closeModal('addTourneyModal');showToast('Tournament Published Successfully!')">PUBLISH TOURNAMENT →</button>
+      </div>
+    </div>
+  </div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/js/ownerportal.js"></script>
+<script>lucide.createIcons();</script>
+</div><!-- /.body -->
+</body>
+</html>

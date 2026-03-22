@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book2Play — Super Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/adminportal.css">
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-icon" id="toastIcon"><i data-lucide="check-circle" style="color:var(--g)"></i></span>&nbsp;<span id="toastMsg">Done!</span></div>
+
+<!-- ══════════════════════════════════════
+     AUTH PAGE
+══════════════════════════════════════ -->
+<div id="authPage" style="width:100%;display:flex">
+<div class="auth-page" style="width:100%">
+  <div class="auth-bg"></div>
+  <div class="auth-card">
+    <div class="auth-logo">BOOK<span>2</span>PLAY</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Super Admin Portal</div>
+    <div class="auth-badge-auth"><i data-lucide="shield" style="width:10px;height:10px;display:inline-block;vertical-align:text-bottom;margin-right:2px"></i> SUPER ADMIN</div>
+
+    <div id="oform-login">
+      <div class="field"><label class="field-label">Admin ID</label><input class="field-input" type="text" placeholder="admin@book2play.com" id="adminEmail"></div>
+      <div class="field"><label class="field-label">Secret Key</label><input class="field-input" type="password" placeholder="••••••••" id="adminPwd"></div>
+      <button class="btn btn-amber btn-full btn-lg" style="margin-bottom:10px" onclick="doAdminLogin()">ENTER PLATFORM SYSTEM →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN DASHBOARD
+══════════════════════════════════════ -->
+<div id="dashApp" style="display:none;width:100%">
+
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">BOOK<span>2</span>PLAY</div>
+    <div class="sb-badge" style="background:var(--p2);color:var(--txt);border-color:var(--bdr)"><i data-lucide="shield" style="width:10px;height:10px;display:inline-block;vertical-align:middle;margin-right:2px"></i> Admin</div>
+    <button class="sidebar-close-btn" onclick="document.querySelector('.sidebar').classList.remove('show')">✕</button>
+  </div>
+  <div class="sb-owner-info">
+    <div class="sb-avatar" style="background:#0F172A">SA</div>
+    <div>
+      <div class="sb-owner-name">System Admin</div>
+      <div class="sb-owner-sub">God Mode</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sbn-section">Platform Hub</div>
+    <div class="sbn-item active" onclick="goPage('overview',this)"><span class="sbn-icon"><i data-lucide="layout-dashboard" style="width:16px;height:16px"></i></span> Platform Overview</div>
+    <div class="sbn-section">Marketplace</div>
+    <div class="sbn-item" onclick="goPage('approvals',this)"><span class="sbn-icon"><i data-lucide="check-square" style="width:16px;height:16px"></i></span> Venue Approvals<span class="sbn-badge" style="background:var(--red);color:white">3</span></div>
+    <div class="sbn-item" onclick="goPage('venues',this)"><span class="sbn-icon"><i data-lucide="building" style="width:16px;height:16px"></i></span> All Venues</div>
+    <div class="sbn-item" onclick="goPage('users',this)"><span class="sbn-icon"><i data-lucide="users" style="width:16px;height:16px"></i></span> Customers</div>
+    <div class="sbn-section">Financials</div>
+    <div class="sbn-item" onclick="goPage('payouts',this)"><span class="sbn-icon"><i data-lucide="credit-card" style="width:16px;height:16px"></i></span> Settlements & Payouts</div>
+    <div class="sbn-item" onclick="goPage('platformfee',this)"><span class="sbn-icon"><i data-lucide="pie-chart" style="width:16px;height:16px"></i></span> Platform Earnings</div>
+    <div class="sbn-item" onclick="goPage('promos',this)"><span class="sbn-icon"><i data-lucide="tag" style="width:16px;height:16px"></i></span> Promo Codes</div>
+  </nav>
+  <div class="sb-bottom">
+    <button class="btn btn-ghost btn-full btn-sm" onclick="doAdminLogout()">Log Out</button>
+  </div>
+</aside>
+
+<!-- MAIN AREA -->
+<div class="main">
+
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="topbar-mobile-btn" onclick="document.querySelector('.sidebar').classList.toggle('show')">☰</button>
+      <div class="topbar-title" id="topbarTitle">PLATFORM OVERVIEW</div>
+    </div>
+    <button class="topbar-btn" style="padding:8px;display:flex"><i data-lucide="bell" style="width:16px;height:16px"></i></button>
+  </div>
+
+  <!-- PAGE: OVERVIEW -->
+  <div class="dash-page active" id="dp-overview">
+    <div class="dash-page-title">BOOK2PLAY <span style="color:var(--a)">COMMAND CENTER</span></div>
+    <div class="dash-page-sub">Platform-wide metrics and performance.</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="pie-chart" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Total GMV (MTD)</div><div class="kpi-val">₹42.5L</div><div class="kpi-chg">Gross Booking Value</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="dollar-sign" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Net Revenue (5%)</div><div class="kpi-val">₹2.12L</div><div class="kpi-chg">▲ 24% vs last month</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="building" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Active Venues</div><div class="kpi-val">128</div><div class="kpi-chg">Across 12 cities</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="users" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Total Players</div><div class="kpi-val">45.2K</div><div class="kpi-chg">▲ +1.2K this week</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-hdr"><div class="card-title">RECENT VENUE ONBOARDINGS</div><button class="btn btn-outline btn-sm" onclick="goPage('approvals',null)">Review Pending →</button></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Venue ID</th><th>Business Name</th><th>City</th><th>Courts</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="overviewVenues"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: APPROVALS -->
+  <div class="dash-page" id="dp-approvals">
+    <div class="dash-page-title">VENUE <span style="color:var(--a)">APPROVALS</span></div>
+    <div class="dash-page-sub">Verify KYC and court details before listing venues on the player app.</div>
+    <div class="card">
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Venue Name</th><th>Owner</th><th>Phone</th><th>Document (KYC)</th><th>Action</th></tr></thead>
+          <tbody id="pendingTbody">
+            <tr><td><b>Pro Sports Arena</b></td><td>Rajesh Kumar</td><td>+91 9876543210</td><td><a href="#" style="color:var(--a);text-decoration:underline">GST_Cert.pdf</a></td><td><button class="btn btn-amber btn-sm" onclick="approveVenue(this)">Approve</button> <button class="btn btn-danger btn-sm" onclick="rejectVenue(this)">Reject</button></td></tr>
+            <tr><td><b>Smash Badminton Hub</b></td><td>Anita Sharma</td><td>+91 9999988888</td><td><a href="#" style="color:var(--a);text-decoration:underline">Aadhar_Card.pdf</a></td><td><button class="btn btn-amber btn-sm" onclick="approveVenue(this)">Approve</button> <button class="btn btn-danger btn-sm" onclick="rejectVenue(this)">Reject</button></td></tr>
+            <tr><td><b>Greenbox Turf</b></td><td>Vikram Singh</td><td>+91 8888877777</td><td><a href="#" style="color:var(--a);text-decoration:underline">Pan_Card.pdf</a></td><td><button class="btn btn-amber btn-sm" onclick="approveVenue(this)">Approve</button> <button class="btn btn-danger btn-sm" onclick="rejectVenue(this)">Reject</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: SETTLEMENTS -->
+  <div class="dash-page" id="dp-payouts">
+    <div class="dash-page-title">VENDOR <span style="color:var(--a)">SETTLEMENTS</span></div>
+    <div class="dash-page-sub">Transfer payouts to venue owners (T+2 rolling settlement). BookMyShow style Nodal splits.</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="banknote" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Escrow Balance</div><div class="kpi-val">₹8.5L</div><div class="kpi-chg">Collected from players</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="refresh-cw" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Due for Settlement</div><div class="kpi-val">₹4.2L</div><div class="kpi-chg" style="color:var(--red)">Pending processing</div></div>
+      <div class="kpi"><div class="kpi-icon"><i data-lucide="check-circle" style="width:24px;height:24px;color:var(--a);margin-bottom:12px;opacity:0.6"></i></div><div class="kpi-lbl">Settled Today</div><div class="kpi-val">₹1.8L</div><div class="kpi-chg">Successfully paid out</div></div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <div class="card-hdr" style="display:flex;justify-content:space-between"><div class="card-title">PENDING PAYOUTS</div><button class="btn btn-amber btn-sm" onclick="showToast('Processing all pending payouts...')">Process All Due &rarr;</button></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Venue</th><th>Period</th><th>Gross Volume</th><th>Platform Fee (5%)</th><th>Net Payable</th><th>Bank A/C</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><b>Cricket Ground A</b></td><td>12 Mar - 14 Mar</td><td>₹48,000</td><td style="color:var(--red)">₹2,400</td><td style="font-weight:700;color:var(--a)">₹45,600</td><td>HDFC ****4521</td><td><button class="btn btn-amber btn-sm" onclick="this.innerHTML='Processing...';setTimeout(()=>this.outerHTML='<span class=\'sc sc-ok\'>Settled</span>',1500)">Settle Now</button></td></tr>
+            <tr><td><b>City Tennis Park</b></td><td>12 Mar - 14 Mar</td><td>₹22,000</td><td style="color:var(--red)">₹1,100</td><td style="font-weight:700;color:var(--a)">₹20,900</td><td>ICICI ****9988</td><td><button class="btn btn-amber btn-sm" onclick="this.innerHTML='Processing...';setTimeout(()=>this.outerHTML='<span class=\'sc sc-ok\'>Settled</span>',1500)">Settle Now</button></td></tr>
+            <tr><td><b>Indoor Shuttle Hub</b></td><td>10 Mar - 12 Mar</td><td>₹18,500</td><td style="color:var(--red)">₹925</td><td style="font-weight:700;color:var(--a)">₹17,575</td><td>SBI ****1234</td><td><span class="sc sc-pend">⏳ Queued</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-page" id="dp-venues"><div class="dash-page-title">ALL <span style="color:var(--a)">VENUES</span></div><div class="dash-page-sub">System under development... Checkout Overview and Settlements.</div></div>
+  <div class="dash-page" id="dp-users"><div class="dash-page-title">ALL <span style="color:var(--a)">USERS</span></div><div class="dash-page-sub">System under development... Checkout Overview and Settlements.</div></div>
+  <div class="dash-page" id="dp-platformfee"><div class="dash-page-title">PLATFORM <span style="color:var(--a)">REVENUE</span></div><div class="dash-page-sub">System under development... Checkout Overview and Settlements.</div></div>
+
+  <!-- PAGE: PROMO CODES -->
+  <div class="dash-page" id="dp-promos">
+    <div class="page-header-flex">
+      <div>
+        <div class="dash-page-title">PROMO <span style="color:var(--a)">CODES</span></div>
+        <div class="dash-page-sub" style="margin-bottom:0">Generate and manage discount coupons for players.</div>
+      </div>
+      <button class="btn btn-amber" onclick="showToast('Coupon generation portal opened.')"><i data-lucide="plus" style="width:16px;height:16px"></i> Create Coupon</button>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">ACTIVE CAMPAIGNS</div></div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Code</th><th>Discount</th><th>Valid Till</th><th>Redemptions</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td><b style="font-family:var(--fd);font-size:16px;color:var(--a)">WELCOME50</b></td><td>Flat ₹50 Off</td><td>31 Dec 2026</td><td>1,245</td><td><span class="sc sc-ok">Active</span></td><td><button class="btn btn-ghost btn-sm">Pause</button></td></tr>
+            <tr><td><b style="font-family:var(--fd);font-size:16px;color:var(--a)">FREEPLAY</b></td><td>Flat ₹200 Off</td><td>15 Apr 2026</td><td>430</td><td><span class="sc sc-ok">Active</span></td><td><button class="btn btn-ghost btn-sm">Pause</button></td></tr>
+            <tr><td><b style="font-family:var(--fd);font-size:16px;color:var(--muted)">SUMMER20</b></td><td>20% Off</td><td>01 Mar 2026</td><td>8,500</td><td><span class="sc sc-can">Expired</span></td><td><button class="btn btn-danger btn-sm" onclick="this.parentNode.parentNode.style.display='none';showToast('Deleted promo')">Delete</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.main -->
+</div><!-- /#dashApp -->
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/js/adminportal.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>
